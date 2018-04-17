@@ -38,7 +38,7 @@ class Entry(models.Model):
 
 ## 추가
 class Comment(models.Model):
-    post = models.ForeignKey(Topic, related_name='comments')
+    post = models.ForeignKey(Entry, related_name='comments')
     author = models.CharField(max_length=200)
     text = models.TextField()
     created_date = models.DateTimeField(auto_now_add=True)

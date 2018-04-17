@@ -121,11 +121,11 @@ def entry_delete(request, entry_id, topic_id):
     return render(request, 'learning_logs/topic.html', context)
 
 
-
 # 추가
-def add_comment_to_post(request, topic_id):
+def add_comment_to_post(request, topic_id, entry_id):
     #post = get_object_or_404(Topic, pk=topic_id)
-    post = Topic.objects.get(id=topic_id)
+    #post = Topic.objects.get(id=topic_id)
+    post = Entry.objects.get(id=entry_id)
     if request.method == "POST":
         form = CommentForm(request.POST)
         if form.is_valid():

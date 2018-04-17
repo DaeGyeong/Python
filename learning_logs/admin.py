@@ -5,5 +5,4 @@ from learning_logs.models import Topic, Entry, Comment
 
 admin.site.register(Topic)
 admin.site.register(Entry)
-#추가
 admin.site.register(Comment)
