@@ -1,0 +1,29 @@
+{% extends "learning_logs/base.html" %}
+{% load bootstrap3 %}
+
+{% block header %}
+<h3> Edit Entry </h3>
+<script type="text/javascript">
+
+
+</script>
+{% endblock header %}
+
+{% block content %}
+  <form action="{% url 'learning_logs:edit_entry' entry.id %}" method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <!--{{ form.as_p }}-->
+
+    {% buttons %}
+      <button class="btn btn-default"><a href="{% url 'learning_logs:topic' topic.id %}">이전으로가기</a></button>
+      &nbsp;    &nbsp;
+      <button name="submit" class="btn btn-default">저장</button>
+      &nbsp;  &nbsp;  &nbsp;  &nbsp;
+      <!--<button class="btn btn-default" value="submit"><a href="delete">삭제</a></button>-->
+      <button class="btn btn-default" value="submit"><a href="{% url 'learning_logs:entry_delete' entry_id=entry.id topic_id=topic.id %}">삭제</a></button>
+
+    {% endbuttons %}
+</form>
+
+{% endblock content %}

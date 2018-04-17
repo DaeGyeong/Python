@@ -1,0 +1,39 @@
+{% extends "learning_logs/topic.html" %}
+{% load bootstrap3 %}
+
+{% block header %}
+  <a href="{% url 'learning_logs:topics' %}"><h1>{{ topic }}</h1></a>
+{% endblock header %}
+
+{% block content %}
+  <p>
+    <a href="{% url 'learning_logs:new_entry' topic.id %}">add new entry</a>
+  </p>
+  {% for entry in entries %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3>
+          {{ entry.date_added|date:'M d, Y H:i' }}
+          <small>
+            <a href="{% url 'learning_logs:edit_entry' entry.id %}">edit entry</a>
+          </small>
+        </h3>
+      </div>
+      <div class="pannel-body">
+         <!-- {{ entry.text|linebreaks }} -->
+        <!-- 버튼 추가 중 -->
+
+        <a href="topic.html">{{ entry.text | linebreaks }}</a>
+          <p class="totop">
+            <a href="#top">Back to top</a>
+          </p>
+        <!-- 여기까지 버튼 -->
+
+
+      </div>
+    </div>
+  {% empty %}
+    여기는 아닌데~~?
+  {% endfor %}
+{% endblock content %}
+<!-- 주석 -->

@@ -1,0 +1,85 @@
+{% extends 'learning_logs/base.html' %}
+{% load bootstrap3 %}
+
+{% block header %}
+<meta charset="utf-8">
+<a href="{% url 'learning_logs:topics' %}"><h1>{{ topic }}</h1></a>
+<!-- 자바 스크립트로 더보기 버튼 구현 -->
+<!--
+<script type="text/javascript">
+var bDisplay = true;
+function doDisplay() {
+  var con = document.getElementById("myDIV");
+  if(con.style.display=='none'){
+    con.style.display = 'block';
+  }else{
+    con.style.display = 'none';
+  }
+}
+</script>
+-->
+
+<script type="text/javascript">
+     function showhide(obj) {
+     var seogd = document.getElementById(obj);
+        if ( seogd.style.display == 'none' ) { // 만약 seogd가 none이 아니면 즉, 보여지는 상태이면
+            seogd.style.display = '';   // seogd를 숨기고
+        } else {
+       seogd.style.display = 'none'; // seogd이 숨김 상태이면 나타내라
+      }
+}
+</script>
+
+{% endblock header %}
+
+{% block content %}
+<p>
+  <a href="{% url 'learning_logs:new_entry' topic.id %}">add new entry</a>
+</p>
+{% for entry in entries %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3>
+      {{ entry.date_added|date:'M d, Y H:i' }}
+      <small>
+        <a href="{% url 'learning_logs:edit_entry' entry.id %}">edit entry</a>
+      </small>
+    </h3>
+  </div>
+  <div class="pannel-body">
+    <a href="javascript:showhide({{ entry.id }});">{{ entry }}</a>
+    <div id="{{ entry.id }}" style="display:none">
+      {{ entry.text | linebreaks }}
+    </div>
+<!-- 추가내용 -->
+    <hr>
+    <a class="btn btn-default" href="{% url 'learning_logs:add_comment_to_post' topic.id %}">Add comment</a>
+    <!-- 미션 !!  entry_id 값이랑 같게 나타내기 -->
+      {% for comment in topic.comments.all %}
+        <div class="comment">
+          <div class="date">{{ comment.created_date }}</div>
+          <strong>{{ comment.author }}</strong>
+          <p>{{ comment.text|linebreaks }}</p>
+        </div>
+      {% empty %}
+        <p>No comments here yet :(</p>
+      {% endfor %}
+<!-- 여기까지 -->
+    <!--
+    <a href="javascript:doDisplay();"> {{ entry | linebreaks }} </a>
+    <div id="myDIV" '''style="display:none"'''>
+      {{ entry.text | linebreaks }}
+
+      <! stlye 값을 none 으로 줄 경우 바로 내용이 나타나지 않음 >
+    </div>
+  -->
+  </div>
+</div>
+{% empty %}
+여기는 아닌데~~?
+{% endfor %}
+<p class="totop">
+  <a href="#top">위로</a>
+</p>
+{% endblock content %}
+<!-- 주석 -->
