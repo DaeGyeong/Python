@@ -1,10 +1,13 @@
 {% extends 'learning_logs/base.html' %}
+{% load bootstrap3 %}
 
 {% block content %}
-    <h1>New comment</h1>
-    <form method="POST" class="post-form">
+    <h1><a href="{% url 'learning_logs:topics' %}">New comment</a></h1>
+
+    <form method="post" >
       {% csrf_token %}
-        {{ form.as_p }}
+        <!--{{ form.as_p }}-->
+        {% bootstrap_form form %}
         <button type="submit" class="save btn btn-default">Send</button>
     </form>
 {% endblock %}

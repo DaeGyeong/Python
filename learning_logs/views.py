@@ -118,7 +118,8 @@ def entry_delete(request, entry_id, topic_id):
 
     entries = topic.entry_set.order_by('-date_added')
     context = {'topic': topic, 'entries': entries}
-    return render(request, 'learning_logs/topic.html', context)
+    #return render(request, 'learning_logs/topic.html', context)
+    return HttpResponseRedirect(reverse('learning_logs:topic', args=[topic_id]))
 
 
 # 추가
@@ -137,3 +138,40 @@ def add_comment_to_post(request, topic_id, entry_id):
     else:
         form = CommentForm()
     return render(request, 'learning_logs/add_comment_to_post.html', {'form': form})
+
+
+# 삭제 버튼 구현
+def comment_delete(request, topic_id, comment_id):
+    entry = Comment.objects.get(id=comment_id)
+    print("delete\n\n")
+    entry.delete()
+
+    topic = Topic.objects.get(id=topic_id)
+    entries = topic.entry_set.order_by('-date_added')
+    context = {'topic': topic, 'entries': entries}
+
+    return HttpResponseRedirect(reverse('learning_logs:topic', args=[topic_id]))
+
+# 수정
+def edit_comment(request, topic_id, entry_id, comment_id):
+    entry = Entry.objects.get(id=entry_id)
+    comment = Comment.objects.get(id=comment_id)
+    print(topic_id)
+    print(entry_id)
+    print(comment_id)
+    topic = entry.topic
+    if topic.owner != request.user:
+        raise Http4Http404
+
+    if request.method != 'POST':
+        # 첫 요청이므로 폼을 현재 텍스트로 채움
+        form = CommentForm(instance=comment)
+    else :
+        # POST 데이터를 받았을때 받은 데이터 처리
+        form = CommentForm(instance = comment, data = request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('learning_logs:topic', args=[topic.id]))
+
+    context = {'comment': comment, 'topic': topic, 'form': form}
+    return render(request, 'learning_logs/edit_comment.html', context)

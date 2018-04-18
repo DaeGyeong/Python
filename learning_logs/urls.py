@@ -17,7 +17,9 @@ urlpatterns = [
 
     url(r'^edit_entry/(?P<topic_id>\d+)/delete/(?P<entry_id>\d+)/$', views.entry_delete, name='entry_delete'),
 
+    url(r'^topics/(?P<topic_id>\d+)/delete/(?P<comment_id>\d+)$', views.comment_delete, name='comment_delete'),
 
     url(r'^topics/(?P<topic_id>[0-9]+)/comment/(?P<entry_id>\d+)/$', views.add_comment_to_post, name='add_comment_to_post'),
+    url(r'^topics/(?P<topic_id>[0-9]+)/edit/(?P<entry_id>\d+)/comment/(?P<comment_id>\d+)$', views.edit_comment, name='edit_comment'),
 ]
 #</topic_id>
