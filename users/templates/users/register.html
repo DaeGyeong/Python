@@ -8,7 +8,8 @@
 {% block content %}
   <form action="{% url 'users:register' %}" method="post" class="form">
     {% csrf_token %}
-      {{ form.as_p }}
+      <!--{{ form.as_p }}-->
+      {% bootstrap_form form %}
 
       {% buttons %}
         <button name="submit" class="btn btn-primary">가입완료</button>

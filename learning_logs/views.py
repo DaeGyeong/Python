@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-#form 생성
 from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
@@ -94,23 +93,11 @@ def edit_entry(request, entry_id):
     context = {'entry': entry, 'topic': topic, 'form': form}
     return render(request, 'learning_logs/edit_entry.html', context)
 
-'''
-@login_required
-def entry_delete(request, entry_id):
-    entry = Entry.objects.get(id=entry_id)
-    entry.delete()
-    print("delete\n\n")
-    #return render(request, 'learning_logs/topic.html', context)
-    topics = Topic.objects.filter(owner=request.user).order_by('date_added')  # 필터를 거쳐 로그인한 사용자만 접근 가능
-    context = {'topics' : topics}
-    return render(request, 'learning_logs/topics.html', context)
-'''
+
 @login_required
 def entry_delete(request, entry_id, topic_id):
     entry = Entry.objects.get(id=entry_id)
     entry.delete()
-    print("delete\n\n")
-    #return render(request, 'learning_logs/topic.html', context)
     topic = Topic.objects.get(id=topic_id)
 
     if topic.owner != request.user: # 주제가 현재 사용자의 것인지 확인
@@ -123,9 +110,7 @@ def entry_delete(request, entry_id, topic_id):
 
 
 # 추가
-def add_comment_to_post(request, topic_id, entry_id):
-    #post = get_object_or_404(Topic, pk=topic_id)
-    #post = Topic.objects.get(id=topic_id)
+def add_comment(request, topic_id, entry_id):
     post = Entry.objects.get(id=entry_id)
     if request.method == "POST":
         form = CommentForm(request.POST)
@@ -137,13 +122,12 @@ def add_comment_to_post(request, topic_id, entry_id):
             return HttpResponseRedirect(reverse('learning_logs:topic', args=[topic_id]))
     else:
         form = CommentForm()
-    return render(request, 'learning_logs/add_comment_to_post.html', {'form': form})
+    return render(request, 'learning_logs/add_comment.html', {'form': form})
 
 
 # 삭제 버튼 구현
 def comment_delete(request, topic_id, comment_id):
     entry = Comment.objects.get(id=comment_id)
-    print("delete\n\n")
     entry.delete()
 
     topic = Topic.objects.get(id=topic_id)
@@ -156,9 +140,6 @@ def comment_delete(request, topic_id, comment_id):
 def edit_comment(request, topic_id, entry_id, comment_id):
     entry = Entry.objects.get(id=entry_id)
     comment = Comment.objects.get(id=comment_id)
-    print(topic_id)
-    print(entry_id)
-    print(comment_id)
     topic = entry.topic
     if topic.owner != request.user:
         raise Http4Http404

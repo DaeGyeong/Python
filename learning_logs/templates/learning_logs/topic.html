@@ -1,8 +1,7 @@
 {% extends 'learning_logs/base.html' %} {% load bootstrap3 %} {% block header %}
 <meta charset="utf-8">
 <a href="{% url 'learning_logs:topics' %}"><h1>{{ topic }}</h1></a>
-<!-- 자바 스크립트로 더보기 버튼 구현 -->
-<!--
+<!-- 자바 스크립트로 더보기 버튼 구현
 <script type="text/javascript">
 var bDisplay = true;
 function doDisplay() {
@@ -37,7 +36,7 @@ function doDisplay() {
     <h3>
       {{ entry.date_added|date:'Y년 M d일 H시 i분' }}
       <small style="float:right">
-        <a href="{% url 'learning_logs:add_comment_to_post' topic.id entry.id %}">comment</a>
+        <a href="{% url 'learning_logs:add_comment' topic.id entry.id %}">comment</a>
       </small>
       <small style="float:right">
         <a href="{% url 'learning_logs:edit_entry' entry.id %}">edit entry</a>  &nbsp;    &nbsp;  &nbsp;    &nbsp;
@@ -59,14 +58,10 @@ function doDisplay() {
         <button class="btn btn-default" value="submit" style="float:right"><a href="{% url 'learning_logs:edit_comment' topic.id entry.id comment.id %}">수정</a></button>
 
         <button class="btn btn-default" value="submit" style="float:right"><a href="javascript:showhide({{ comment.id }}) ;">내용</a></button>
-
         <div id="{{ comment.id }}" style="display:none">
           <p>{{ comment.text|linebreaks }}</p>
         </div>
-
-
       </div>
-      <!--<p>{{ comment.text|linebreaks }}</p>-->
     </div>
     <hr> {% empty %}
     <p>No comments :(</p>
