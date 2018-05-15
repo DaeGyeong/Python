@@ -12,6 +12,10 @@ def index(request):
     ''' home page '''
     return render(request, 'learning_logs/index.html')
 
+def nsight(request):
+    url = "http://api.nsight.navercorp.com/monapi/api/request?r=R-20150923-001&k=dev-cloudojt001-ncl&rt=img"
+    return render(request, 'learning_logs/nsight.html', {'url': url})
+
 @login_required
 def topics(request):
     ''' 주제를 모두 표시 '''
