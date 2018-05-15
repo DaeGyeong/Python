@@ -1,23 +1,23 @@
 {% extends "learning_logs/base.html" %} {% block header %}
 
-  <div class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <h2>dev-cloudojt001-ncl</h2>
-    </a>
-    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-      <a class="dropdown-item" href="#" id="1.1.1.1" onclick="graph(id);">CPU 총 사용률</a>
-      <div class="dropdown-divider"></div>
-      <a class="dropdown-item" href="#" id="1.1.1.2" onclick="graph(id);">CPU 가동률</a>
-      <div class="dropdown-divider"></div>
-      <a class="dropdown-item" href="#" id="1.1.3.1" onclick="graph(id);">메모리 총 사용률</a>
-      <div class="dropdown-divider"></div>
-      <a class="dropdown-item" href="#" id="1.1.4.1" onclick="graph(id);">스왑 총 사용률</a>
-      <div class="dropdown-divider"></div>
-      <a class="dropdown-item" href="#" id="1.1.5.1" onclick="graph(id);">디스크 사용률</a>
-      <div class="dropdown-divider"></div>
-      <a class="dropdown-item" id="1.1.1.1" onclick="graph(id);">test</a>
-    </div>
+<div class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <h2>dev-cloudojt001-ncl</h2>
+  </a>
+  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    <a class="dropdown-item" href="#" id="1.1.1.1" onclick="graph(id);">CPU 총 사용률</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="#" id="1.1.1.2" onclick="graph(id);">CPU 가동률</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="#" id="1.1.3.1" onclick="graph(id);">메모리 총 사용률</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="#" id="1.1.4.1" onclick="graph(id);">스왑 총 사용률</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="#" id="1.1.5.1" onclick="graph(id);">디스크 사용률</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" id="1.1.1.1" onclick="graph(id);">test</a>
   </div>
+</div>
 
 <script type="text/javascript" language="JavaScript">
   function layer_toggle(obj) {
@@ -26,136 +26,102 @@
   }
 </script>
 
-<!-- 여기에 그래프넣기 -->
-<!-- window.onload = function () {    해당 페이지 접속시 자동으로 실행? -->
 <script>
-var graph = function(parm) {
-var graph_data = [];
-var title_name, srv_name;
+  var graph = function(parm) {
+    var graph_data = [];
+    var title_name, srv_name;
 
-if(parm=="1.1.1.1"){
-  title_name="CPU 총 사용률";
-}else if(parm=="1.1.1.2"){
-  title_name="CPU 가동률";
-}else if(parm=="1.1.3.1"){
-  title_name="메모리 총 사용률";
-}else if(parm=="1.1.4.1"){
-  title_name="스왑 총 사용률";
-}else if(parm=="1.1.5.1"){
-  title_name="디스크 사용률";
-}
-srv_name='dev-cloudojt001-ncl';
-var url_result = 'http://api.nsight.navercorp.com/monapi/api/request?r=R-20150923-001&k='+srv_name+'&rt=json&data='+parm
-var graph_data_x = [], graph_data_y = [];
-$.ajax({
-  url: url_result,
-  type: 'get',
-  dataType: 'json',
-  success: function(data){
-    var jdata = data['result']['0']['rows'];
-    for(var i=0; i<jdata.length; i++){
-      graph_data_x.push(new Date(jdata[i]['time']*1000));
-      graph_data_y.push( parseFloat(jdata[i]['value']) );
+    if (parm == "1.1.1.1") {
+      title_name = "CPU 총 사용률";
+    } else if (parm == "1.1.1.2") {
+      title_name = "CPU 가동률";
+    } else if (parm == "1.1.3.1") {
+      title_name = "메모리 총 사용률";
+    } else if (parm == "1.1.4.1") {
+      title_name = "스왑 총 사용률";
+    } else if (parm == "1.1.5.1") {
+      title_name = "디스크 사용률";
     }
-    myChart.update(); // 차트에 데이터 업로드
-  }
-})
-
-$("canvas#myChart").remove();
-$("div#pannel-body").append('<canvas id="myChart"></canvas>');
-
-var ctx = document.getElementById('myChart').getContext('2d');
-var myChart = new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels: graph_data_x,
-    datasets: [{
-      label: title_name,
-      data: graph_data_y,
-      backgroundColor: "rgba(54, 162, 235, 0.2)"
-    }]
-  },
-  options: {
-    title:{display: true, text: srv_name},
-    scales:{
-      xAxes: [{
-        display: true,
-        type: 'time',
-        format: "HH:mm a",
-
-        position: 'bottom',
-        beginAtZero: true,
-        time:{
-          unit: 'minute',
-          unitStepSize: 5,
-          displayFormats: {
-            'minute': 'h:mm a',
-            'hour': 'h:mm a'
-          }
+    srv_name = 'dev-cloudojt001-ncl';
+    var url_result = 'http://api.nsight.navercorp.com/monapi/api/request?r=R-20150923-001&k=' + srv_name + '&rt=json&data=' + parm
+    var graph_data_x = [],
+      graph_data_y = [];
+    $.ajax({
+      url: url_result,
+      type: 'get',
+      dataType: 'json',
+      success: function(data) {
+        var jdata = data['result']['0']['rows'];
+        for (var i = 0; i < jdata.length; i++) {
+          graph_data_x.push(new Date(jdata[i]['time'] * 1000));
+          graph_data_y.push(parseFloat(jdata[i]['value']));
         }
-      }],
-      yAxes: [{
-        display: true,
-          ticks: {
-          beginAtZero: true,
-          type: 'linear',
-          position: 'left',
-          stepSize: 20,
-          callback: function(tick){
-            return tick.toString() + '%';
-          }
-        }
-      }]
-    },
+        myChart.update(); // 차트에 데이터 업로드
+      }
+    })
+
+    $("canvas#myChart").remove();
+    $("div#pannel-body").append('<canvas id="myChart"></canvas>');
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: graph_data_x,
+        datasets: [{
+          label: title_name,
+          data: graph_data_y,
+          backgroundColor: "rgba(54, 162, 235, 0.2)"
+        }]
+      },
+      options: {
+        title: {
+          display: true,
+          text: srv_name
+        },
+        scales: {
+          xAxes: [{
+            display: true,
+            type: 'time',
+            format: "HH:mm a",
+
+            position: 'bottom',
+            beginAtZero: true,
+            time: {
+              unit: 'minute',
+              unitStepSize: 5,
+              displayFormats: {
+                'minute': 'h:mm a',
+                'hour': 'h:mm a'
+              }
+            }
+          }],
+          yAxes: [{
+            display: true,
+            ticks: {
+              beginAtZero: true,
+              type: 'linear',
+              position: 'left',
+              stepSize: 20,
+              callback: function(tick) {
+                return tick.toString() + '%';
+              }
+            }
+          }]
+        },
+      }
+    });
+
   }
-});
-
-}
-
 </script>
 
-<!-- 그래프 여기까지 -->
 {% endblock header %} {% block content %}
-<!--
-<img src="{{ url }}&data=1.1.1.2">
-<img src="{{ url }}&data=1.1.3.1">
-<img src="{{ url }}&data=1.1.4.1">
-<img src="{{ url }}&data=1.1.5.1">
--->
-
-
-<!--
-<div id=more01a style=display:block>
-  <a href=# onclick="layer_toggle(document.getElementById('more01a')); layer_toggle(document.getElementById('more01b'));return false;">
-    <p>현재 숨겨진 상태입니다.</p>
-  </a>
-</div>
-<div id=more01b style=display:none>
-  <a href=# onclick="layer_toggle(document.getElementById('more01a')); layer_toggle(document.getElementById('more01b'));return false;">
-    <img src="http://api.nsight.navercorp.com/monapi/api/request?r=R-20150923-001&k=dev-cloudojt001-ncl&rt=img&data=1.1.5.1">
-  </a>
-  <img src="{{ url }}">
-</div>
-
-<br><br>
-
-<div id=more02a style=display:block>
-  <a href=# onclick="layer_toggle(document.getElementById('more02a')); layer_toggle(document.getElementById('more02b'));return false;">
-    <p>이렇게 div id와 document.getElementById 값을 조절하면</p>
-  </a>
-</div>
-<div id=more02b style=display:none>
-  <a href=# onclick="layer_toggle(document.getElementById('more02a')); layer_toggle(document.getElementById('more02b'));return false;">
-    <p>여러개를 열고 닫을 수 있습니다.</p>
-  </a>
-  <p>어렵지 않습니다.</p>
-</div>
--->
+<!-- Search Button
 <div style="display:none">
-<input type="text" id="parm" /> <!-- 나중에 검색 으로 만들 때 써볼까 생각중,, -->
-<input type="button" value="send" onclick="graph();" />
+  <input type="text" id="parm" />
+  <input type="button" value="send" onclick="graph();" />
 </div>
-
+-->
 <div id="pannel-body" style="height: 370px; width: 100%;">
   <canvas id="myChart"></canvas>
 </div>
