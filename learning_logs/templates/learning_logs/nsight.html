@@ -29,7 +29,7 @@
 <script>
   var graph = function(parm) {
     var graph_data = [];
-    var title_name, srv_name;
+    var title_name, srv_name, api_key;
 
     if (parm == "1.1.1.1") {
       title_name = "CPU 총 사용률";
@@ -43,7 +43,8 @@
       title_name = "디스크 사용률";
     }
     srv_name = 'dev-cloudojt001-ncl';
-    var url_result = 'http://api.nsight.navercorp.com/monapi/api/request?r=R-20150923-001&k=' + srv_name + '&rt=json&data=' + parm
+    api_key = ' ';
+    var url_result = 'http://api.nsight.navercorp.com/monapi/api/request?r='+api_key+'&k=' + srv_name + '&rt=json&data=' + parm
     var graph_data_x = [],
       graph_data_y = [];
     $.ajax({
