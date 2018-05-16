@@ -43,30 +43,26 @@
       title_name = "디스크 사용률";
     }
     srv_name = 'dev-cloudojt001-ncl';
-<<<<<<< HEAD
 
     var dt = new Date();
     var day = dt.getDate();
     var month = dt.getMonth() + 1;
     var year = dt.getFullYear();
-    var hour =  dt.getHours();
+    var hour = dt.getHours();
     var minute = dt.getMinutes();
-    var date = year+ "" + ("0" + month).slice(-2)+ "" +  ("0" + day).slice(-2)+ "" + ("0" + hour).slice(-2) + ""+ ("0" + minute).slice(-2);
+    var tdt = year + "" + ("0" + month).slice(-2) + "" + ("0" + day).slice(-2) + "" + ("0" + hour).slice(-2) + "" + ("0" + minute).slice(-2);
     //("0"+custdate.getDate()).slice(-2)
     var custdate = new Date(dt);
     custdate.setHours(custdate.getHours() - 4); // 몇시간 전데이터 받을지?
-    var fdt = custdate.getFullYear()+ "" + ("0"+(custdate.getMonth()+1)).slice(-2)+ "" + ("0"+custdate.getDate()).slice(-2)+ "" + ("0"+custdate.getHours()).slice(-2) + ""+ ("0"+custdate.getMinutes()).slice(-2);
+    var fdt = custdate.getFullYear() + "" + ("0" + (custdate.getMonth() + 1)).slice(-2) + "" + ("0" + custdate.getDate()).slice(-2) + "" + ("0" + custdate.getHours()).slice(-2) + "" + ("0" + custdate.getMinutes()).slice(-2);
 
     //console.log("custdate: "+custdate);
     //console.log("fdt: "+fdt);
-    //console.log("date: "+date);
+    //console.log("tdt: "+tdt);
 
-    var url_result = 'http://api.nsight.navercorp.com/monapi/api/request?r=R-20150923-001&k=' + srv_name + '&rt=json&data=' + parm +'&fdt='+fdt+'&tdt='+date
+    var url_result = 'http://api.nsight.navercorp.com/monapi/api/request?r=R-20150923-001&k=' + srv_name + '&rt=json&data=' + parm + '&fdt=' + fdt + '&tdt=' + tdt
     //console.log(url_result)
-=======
-    api_key = ' ';
-    var url_result = 'http://api.nsight.navercorp.com/monapi/api/request?r='+api_key+'&k=' + srv_name + '&rt=json&data=' + parm
->>>>>>> 9b2c51cd2647cf48c0fe6f7c98feb3a7790290c1
+
     var graph_data_x = [],
       graph_data_y = [];
     $.ajax({
