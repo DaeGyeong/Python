@@ -43,7 +43,25 @@
       title_name = "디스크 사용률";
     }
     srv_name = 'dev-cloudojt001-ncl';
-    var url_result = 'http://api.nsight.navercorp.com/monapi/api/request?r=R-20150923-001&k=' + srv_name + '&rt=json&data=' + parm
+
+    var dt = new Date();
+    var day = dt.getDate();
+    var month = dt.getMonth() + 1;
+    var year = dt.getFullYear();
+    var hour =  dt.getHours();
+    var minute = dt.getMinutes();
+    var date = year+ "" + ("0" + month).slice(-2)+ "" +  ("0" + day).slice(-2)+ "" + ("0" + hour).slice(-2) + ""+ ("0" + minute).slice(-2);
+    //("0"+custdate.getDate()).slice(-2)
+    var custdate = new Date(dt);
+    custdate.setHours(custdate.getHours() - 4); // 몇시간 전데이터 받을지?
+    var fdt = custdate.getFullYear()+ "" + ("0"+(custdate.getMonth()+1)).slice(-2)+ "" + ("0"+custdate.getDate()).slice(-2)+ "" + ("0"+custdate.getHours()).slice(-2) + ""+ ("0"+custdate.getMinutes()).slice(-2);
+
+    //console.log("custdate: "+custdate);
+    //console.log("fdt: "+fdt);
+    //console.log("date: "+date);
+
+    var url_result = 'http://api.nsight.navercorp.com/monapi/api/request?r=R-20150923-001&k=' + srv_name + '&rt=json&data=' + parm +'&fdt='+fdt+'&tdt='+date
+    //console.log(url_result)
     var graph_data_x = [],
       graph_data_y = [];
     $.ajax({
@@ -55,6 +73,7 @@
         for (var i = 0; i < jdata.length; i++) {
           graph_data_x.push(new Date(jdata[i]['time'] * 1000));
           graph_data_y.push(parseFloat(jdata[i]['value']));
+          //console.log(new Date(jdata[i]['time'] * 1000 - 1000 * 60 * 60)); //한시간후
         }
         myChart.update(); // 차트에 데이터 업로드
       }
@@ -89,7 +108,7 @@
             beginAtZero: true,
             time: {
               unit: 'minute',
-              unitStepSize: 5,
+              unitStepSize: 30,
               displayFormats: {
                 'minute': 'h:mm a',
                 'hour': 'h:mm a'
