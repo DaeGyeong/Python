@@ -59,12 +59,11 @@
     //console.log("custdate: "+custdate);
     //console.log("fdt: "+fdt);
     //console.log("tdt: "+tdt);
-
-    var url_result = 'http://api.nsight.navercorp.com/monapi/api/request?r=R-20150923-001&k=' + srv_name + '&rt=json&data=' + parm + '&fdt=' + fdt + '&tdt=' + tdt
+    var api_key = '';
+    var url_result = 'http://api.nsight.navercorp.com/monapi/api/request?r=' + api_key + '&k=' + srv_name + '&rt=json&data=' + parm + '&fdt=' + fdt + '&tdt=' + tdt
     //console.log(url_result)
 
-    var graph_data_x = [],
-      graph_data_y = [];
+    var graph_data_x = [], graph_data_y = [];
     $.ajax({
       url: url_result,
       type: 'get',
