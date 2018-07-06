@@ -43,7 +43,7 @@
       title_name = "디스크 사용률";
     }
     srv_name = 'dev-cloudojt001-ncl';
-
+    //  -- 날짜 계산을 위한 식 --
     var dt = new Date();
     var day = dt.getDate();
     var month = dt.getMonth() + 1;
@@ -55,10 +55,8 @@
     var custdate = new Date(dt);
     custdate.setHours(custdate.getHours() - 4); // 몇시간 전데이터 받을지?
     var fdt = custdate.getFullYear() + "" + ("0" + (custdate.getMonth() + 1)).slice(-2) + "" + ("0" + custdate.getDate()).slice(-2) + "" + ("0" + custdate.getHours()).slice(-2) + "" + ("0" + custdate.getMinutes()).slice(-2);
-
-    //console.log("custdate: "+custdate);
-    //console.log("fdt: "+fdt);
-    //console.log("tdt: "+tdt);
+    // -- 날짜 계산 --
+    
     var api_key = 'R-20150923-001';
     var url_result = 'http://api.nsight.navercorp.com/monapi/api/request?r=' + api_key + '&k=' + srv_name + '&rt=json&data=' + parm + '&fdt=' + fdt + '&tdt=' + tdt
     console.log(url_result)
@@ -79,10 +77,11 @@
       }
     })
 
-    $("canvas#myChart").remove();
-    $("div#pannel-body").append('<canvas id="myChart"></canvas>');
+    $("canvas#myChart").remove();   // 이전 차트 제거
+    $("div#pannel-body").append('<canvas id="myChart"></canvas>');  // 새로운 차트 추가
 
-    var ctx = document.getElementById('myChart').getContext('2d');
+      // Chart js 
+    var ctx = document.getElementById('myChart').getContext('2d');   
     var myChart = new Chart(ctx, {
       type: 'line',
       data: {
