@@ -43,6 +43,7 @@
       title_name = "디스크 사용률";
     }
     srv_name = 'dev-cloudojt001-ncl';
+    
     //  -- 날짜 계산을 위한 식 --
     var dt = new Date();
     var day = dt.getDate();
@@ -83,22 +84,24 @@
       // Chart js 
     var ctx = document.getElementById('myChart').getContext('2d');   
     var myChart = new Chart(ctx, {
-      type: 'line',
+      type: 'line',             // 그래프 형태 선택
       data: {
-        labels: graph_data_x,
+        labels: graph_data_x,   // x축 데이터
         datasets: [{
-          label: title_name,
-          data: graph_data_y,
+          label: title_name,  
+          data: graph_data_y,   // y축 데이터
           backgroundColor: "rgba(54, 162, 235, 0.2)"
         }]
       },
-      options: {
+      // 전체에 대한 옵션
+      options: {  
         title: {
           display: true,
           text: srv_name
         },
-        scales: {
-          xAxes: [{
+        scales: {  
+          // x축 옵션
+          xAxes: [{  
             display: true,
             type: 'time',
             format: "HH:mm a",
@@ -114,7 +117,8 @@
               }
             }
           }],
-          yAxes: [{
+          // y축 옵션
+          yAxes: [{  
             display: true,
             ticks: {
               beginAtZero: true,
