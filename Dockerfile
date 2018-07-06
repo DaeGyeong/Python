@@ -223,20 +223,20 @@ WORKDIR /apps/web_root/Django
 RUN sed -i "s/localhost/`hostname -I|cut -f 1 -d ' ' `/g" /apps/web_root/Django/learning_log/settings.py
 RUN sed -i "s/13306/3306/g" /apps/web_root/Django/learning_log/settings.py
 
-RUN echo "/apps/mysql/support-files/mysql.server restart" >> 1
-RUN echo "/apps/mysql/bin/mysql -u root -proot -e 'set password=password('root');'" >> 1
-RUN echo "/apps/mysql/bin/mysql -u root -proot -e 'set password for 'root'@'%'=password('root');'" >> 1
-RUN echo "/apps/mysql/bin/mysql -u root -proot -e 'GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'; flush privileges;'" >> 1
-RUN echo "/apps/Python3/bin/python3 manage.py makemigrations" >> 1
-RUN echo "/apps/Python3/bin/python3 manage.py migrate" >> 1
+RUN echo "/apps/mysql/support-files/mysql.server restart" >> /apps/init_config
+RUN echo "/apps/mysql/bin/mysql -u root -proot -e 'set password=password('root');'" >> /apps/init_config
+RUN echo "/apps/mysql/bin/mysql -u root -proot -e 'set password for 'root'@'%'=password('root');'" >> /apps/init_config
+RUN echo "/apps/mysql/bin/mysql -u root -proot -e 'GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'; flush privileges;'" >> /apps/init_config
+RUN echo "/apps/Python3/bin/python3 manage.py makemigrations" >> /apps/init_config
+RUN echo "/apps/Python3/bin/python3 manage.py migrate" >> /apps/init_config
 
-#RUN chmod +x 1
-#RUN ./1
+RUN chmod +x /apps/init_config
+#RUN /apps/init_config
 
 EXPOSE 80
 #EXPOSE 3306
 
 
-RUN echo "alias apachectl='/home1/irteam/apps/apache2/bin/apachectl'" >> ~/.bashrc
-RUN echo "alias mysql_service='/home1/irteam/apps/mysql/support-files/mysql.server'" >> ~/.bashrc
-RUN echo "alias mysql='/home1/irteam/apps/mysql/bin/mysql'" >> ~/.bashrc
+RUN echo "alias apachectl='/apps/apache2/bin/apachectl'" >> ~/.bashrc
+RUN echo "alias mysql_service='/apps/mysql/support-files/mysql.server'" >> ~/.bashrc
+RUN echo "alias mysql='/apps/mysql/bin/mysql'" >> ~/.bashrc
