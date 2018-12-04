@@ -22,5 +22,5 @@ urlpatterns = [
     url(r'^topics/(?P<topic_id>[0-9]+)/comment/(?P<entry_id>\d+)/$', views.add_comment, name='add_comment'),
     url(r'^topics/(?P<topic_id>[0-9]+)/edit/(?P<entry_id>\d+)/comment/(?P<comment_id>\d+)$', views.edit_comment, name='edit_comment'),
 
-    url(r'^nsight$', views.nsight, name='nsight'),
+    url(r'^mon$', views.mon, name='mon'),
 ]

@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'users',
     # bootstrap
     'bootstrap3',
+    'check',
 )
 
 MIDDLEWARE_CLASSES = (

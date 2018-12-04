@@ -1,0 +1,69 @@
+{% load bootstrap3 %}
+
+<!-- api 리스트 드롭다운 iaas / paas / ai·application   ㄱ한자 탭 8-->
+
+<style>
+.dropdown-toggle{
+  font-size: 20px;
+  color: #517d98;
+}
+.dropdown-item{
+  font-size: 16px;
+  color: #517d98;
+}
+</style>
+
+<script type="text/javascript">
+$(document).ready( () => {
+  $(".disabled").on("click", () => {
+    alert(" 오픈예정입니다. ");
+  })
+})
+</script>
+
+<div class="panel">
+  <section id="platform">
+    <div class="ui pointing menu">
+
+      <span class="dropdown">
+        <a class="dropdown-toggle item" data-toggle="dropdown" href="#"> AI·Application &nbsp;
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li class="dropdown-item"><a href="/ncloud/api/ai_clova">Clova</a></li>
+          <li class="dropdown-item"><a href="/ncloud/api/Maps">Maps</a></li>
+          <li class="dropdown-item"><a href="/ncloud/api/Papago">Papago</a></li>
+          <li class="dropdown-item"><a href="/ncloud/api/nShortURL">nShortURL</a></li>
+          <li class="dropdown-item"><a href="/ncloud/api/CAPTCHA">CAPTCHA</a></li>
+          <li class="dropdown-item"><a href="/ncloud/api/SearchTrend">SearchTrend</a></li>
+          <li class="dropdown-item"><a href="/ncloud/api/APIGW">API Gateway</a></li>
+        </ul>
+      </span>
+
+      <span class="dropdown">
+        <a class="dropdown-toggle item" data-toggle="dropdown" href="#"> IaaS &nbsp;
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+
+          <li class="dropdown-item"><a href="{% url 'ncloud:ServiceUrl' category='iaas' service='server' %}">Server (15)</a></li>
+          <li class="dropdown-item"><a href="{% url 'ncloud:ServiceUrl' category='iaas' service='lb' %}">Load Balancing (2)</a></li>
+          <li class="dropdown-item"><a href="{% url 'ncloud:ServiceUrl' category='iaas' service='autoscaling' %}">Auto Scaling (8)</a></li>
+          <li class="dropdown-item"><a href="{% url 'ncloud:ServiceUrl' category='iaas' service='monitoring' %}">Monitoring (2)</a></li>
+          <!-- li class="dropdown-item disabled"><a href="#">Security (1)</a></li -->
+          <li class="dropdown-item"><a href="{% url 'ncloud:ServiceUrl' category='iaas' service='cdn' %}">CDN (2)</a></li>
+          <li class="dropdown-item"><a href="{% url 'ncloud:ServiceUrl' category='iaas' service='cloudDB' %}">Cloud DB (3)</a></li>
+        </ul>
+      </span>
+
+      <span class="dropdown">
+        <a class="dropdown-toggle item" data-toggle="dropdown" href="#"> PaaS &nbsp;
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li class="dropdown-item"><a href="/ncloud/api/geoLocation">GeoLocation</a></li>
+          <!-- li class="dropdown-item disabled"><a href="#">Cloud Outbound Mailer</a></li -->
+          <!-- li class="dropdown-item disabled"><a href="/ncloud/api/">test</a></li -->
+        </ul>
+      </span>
+
+    </div>
+  </section>
+</div>

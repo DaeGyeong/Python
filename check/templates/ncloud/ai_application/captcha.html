@@ -1,0 +1,146 @@
+{% extends "learning_logs/base.html" %}
+{% load bootstrap3 %}
+{% block page_name %}&nbsp;<a href="{% url 'ncloud:index' %}">Ncloud API Check</a>{% endblock %}
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+  <li>Dashboard</li>
+  <li>NCP API</li>
+</ul><br>
+{% endblock breadcrumbs %}
+{% block content %}
+{% include 'ncloud/api_list.html' %}
+
+<div class="box">
+  <div class="box-body">
+    <form method="post" name="form">
+      {% csrf_token %}
+      <div class="box-header with-border">
+        <span style="margin: 10px 0 0 0px" class="dropdown">
+          <select class="form-control btn-default" name="target" id="target" style="font-size: 18px" >
+            <option value="">CAPTCHA API Select</option>
+            <option value="IMG">CAPTCHA IMG</option>
+            <option value="AUDIO">CAPTCHA AUDIO</option>
+          </select>
+        </span>
+      </div>
+      <div class="box-body">
+        <div class="dataTables_wrapper form-inline dt-bootstrap no-footer" id="datatables-example_wrapper">
+          <div class="row">
+            <div class="col-sm-12">
+              <div style="margin: 20px 20px 20px 0px">
+                <span style="margin: 10px 0 0 30px">
+                  Client ID &nbsp;&nbsp;&nbsp; <input type="text" name="client_id" id="client_id" placeholder="Client Id"/>
+                  </span>
+                <span style="margin: 10px 0 0 30px">
+                  Client Secret &nbsp;&nbsp;&nbsp; <input type="text" name="client_secret" id="client_secret" placeholder="Client secret"/>
+                  </span>
+                <span style="margin: 10px 0 0 30px"> &nbsp;&nbsp;&nbsp;
+                    <input type="button" class="ui button huge" name="testBtn" id="testBtn" value="submit" style="height: 40px; width: 100px" />
+                  </span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="box">
+  <div class="box-body">
+    <div class="box-header with-border">
+      <h4>CAPTCHA API Result</h4><br>
+    </div>
+  <pre>
+<div id="result_area" class="box-header with-border" style="margin: 10px 0px 0px 10px"></div>
+  </pre>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+  var result;
+  $("#testBtn").click(function(){
+    if ($("#client_id").val() == ""){
+      alert("client_id 값을 입력해 주세요.");
+      return $("#client_id").focus();
+
+    }
+    if ($("#client_secret").val() == ""){
+      alert("client_secret 값을 입력해 주세요.");
+      return $("#client_secret").focus();
+    }
+
+    $.ajax({
+      type: "POST",
+      async: false,
+      url: "{% url 'ncloud:CAPTCHA' %}",
+      data: {'client_id':$("#client_id").val(), 'client_secret':$("#client_secret").val(), 'target':$("#target").val()},
+      dataType: "json",
+      success: function(data){
+        $("#result_area").html("key rescode : " + data.key_rescode +"<br><br>");
+        $("#result_area").append("img rescode : " + data.img_rescode +"<br><br>");
+        if ($("#target").val()=='IMG') {
+          $("#result_area").append("<img id='captchaImg' src='/media/captcha.jpg'><br><br>");
+        }
+        else if ($("#target").val() == 'AUDIO') {
+          // $("#result_area").append("<audio controls autoplay style='background-color:white'><source src='/media/captcha.wav' type='audio/wav'></audio>");
+          $("#result_area").append("<audio controls autoplay id='captchaImg'><source src='/media/captcha.wav' type='audio/wav'></audio>");
+        }
+        $("#result_area").append("<form method='post' name='form'>");
+        $("#result_area").append("{% csrf_token %}")
+        $("#result_area").append("<input type='text' name='cap_value' id='cap_value' placeholder='checkCaptcha'/> &nbsp;&nbsp;&nbsp;");
+        $("#result_area").append("<input type='button' class='ui button huge' name='checkBtn' id='checkBtn' value='submit' style='height: 30px; width: 100px' />");
+        $("#result_area").append("</form>");
+        $("#result_area").append("<br><br>");
+
+        $("#checkBtn").click(function(){
+          $.ajax({
+            type: "POST",
+            async: false,
+            url: "{% url 'ncloud:CAPTCHA_Check' %}",
+            data: {'cap_value': $("#cap_value").val()},
+            dataType: "json",
+            success: function(data){
+              result = data.result;
+              $("#img_check").remove();
+              $("#result_area").append("<span id='img_check'>CAPTCHA Confirm : " + data.result + "</span>")
+
+              if(!result) {
+                $.ajax({
+                  type: "POST",
+                  async: false,
+                  url: "{% url 'ncloud:CAPTCHA' %}",
+                  data: {'client_id':$("#client_id").val(), 'client_secret':$("#client_secret").val(), 'target':$("#target").val()},
+                  dataType: "json",
+                  success: function(data){
+                    var d = new Date();
+                    if ($("#target").val() == 'IMG') {
+                      document.getElementById("captchaImg").src="/media/captcha.jpg?a=" + d.getTime();
+                    }
+                    else if ($("#target").val() == 'AUDIO') {
+                      document.getElementById("captchaImg").src="/media/captcha.wav?a=" + d.getTime();
+                    }
+                  }
+                })
+
+              }
+            },
+            error: function(data){
+              console.log("error");
+              alert("새로고침");
+            }
+          })
+        })
+      },
+      error: function(request, status, error){
+        alert(request.responseText);
+      },
+    });
+  })
+
+
+
+</script>
+
+{% endblock content %}

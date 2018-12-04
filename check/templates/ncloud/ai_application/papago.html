@@ -1,0 +1,123 @@
+{% extends "learning_logs/base.html" %}
+{% load bootstrap3 %}
+{% block page_name %}&nbsp;<a href="{% url 'ncloud:index' %}">Ncloud API Check</a>{% endblock %}
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+  <li>Dashboard</li>
+  <li>NCP API</li>
+</ul>
+<br>
+{% endblock breadcrumbs %}
+{% block content %}
+{% include 'ncloud/api_list.html' %}
+
+<script type="text/javascript">
+  function changes(fr) {
+    if (fr == 'smt') {
+      //뿌려줄 값을 배열로정렬
+      num = new Array("영어", "일본어", "중국어간체");
+      vnum = new Array("en", "ja", "zh-CN");
+    }
+    else if (fr == 'nmt') {
+
+      num = new Array("영어", "일본어", "중국어간체", "중국어번체", "스페인어", "프랑스어", "베트남어", "태국어", "인도네시아어");
+      vnum = new Array("en", "ja", "zh-CN", "zh-TW", "es", "fr", "vi", "th", "id");
+    }
+    // select안의 리스트를 기본값으로 한다
+    for (i = 0; i < form.target_lang.length; i++) {
+      form.target_lang.options[0] = null;
+    }
+    //for문을 이용하여 두번째(test2)셀렉트 박스에 값을 뿌려준다)
+    for (i = 0; i < num.length; i++) {
+      document.form.target_lang.options[i] = new Option(num[i], vnum[i]);
+    }
+  }
+</script>
+
+<div class="box">
+  <div class="box-body">
+    <form method="post" name="form">
+      {% csrf_token %}
+      <div class="box-header with-border">
+        <span style="margin: 10px 0 0 0px" class="dropdown">
+          <select class="form-control btn-default" name="target" id="target" style="font-size: 18px" onchange="changes(document.form.target.value)" >
+            <option value="">Papago API Select</option>
+            <option value="smt">Papago(SMT)</option>
+            <option value="nmt">Papago(NMT)</option>
+          </select>
+        </span>
+      </div>
+      <div class="box-body">
+        <div class="dataTables_wrapper form-inline dt-bootstrap no-footer" id="datatables-example_wrapper">
+          <div class="row">
+            <div>
+              <span style="margin: 10px 0 0 30px">
+                Client ID &nbsp;&nbsp;&nbsp; <input type="text" name="client_id" id="client_id" placeholder="Client Id"/>
+                </span>
+              <span style="margin: 10px 0 0 30px">
+                Client Secret &nbsp;&nbsp;&nbsp; <input type="text" name="client_secret" id="client_secret" placeholder="Client secret"/><br><br>
+                </span>
+              <span style="margin: 10px 0 0 30px">
+                EncText &nbsp;&nbsp;&nbsp;&nbsp; <input type="text" name="encText" id="encText" value="만나서 반갑습니다">
+                </span>
+              <span style="margin: 10px 0 0 30px" class="dropdown">
+                  <select class="form-control btn-primary" name="target_lang" id="target_lang" >
+                <option>Target Language</option>
+                  </select>
+                </span>
+                <span style="margin: 10px 0 0 30px"> &nbsp;&nbsp;&nbsp;
+                    <input type="button" class="ui button huge" name="testBtn" id="testBtn" value="submit" style="height: 40px; width: 100px" />
+                  </span>
+            </div>
+          </form>
+        </div>
+     </div>
+    </div>
+   </div>
+</div>
+  <div class="box">
+    <div class="box-body">
+      <div class="box-header with-border">
+        <h4 id="name_area">
+          Papago API Result
+        </h4><br>
+      </div>
+<pre>
+<div id="result_area" class="box-header with-border" style="margin: 10px 0 0 10px"></div>
+</pre>
+</div>
+</div>
+
+<script type="text/javascript">
+
+  $("#testBtn").click(function(){
+    if ($("#client_id").val() == ""){
+      alert("client_id 값을 입력해 주세요.");
+      return $("#client_id").focus();
+    }
+    if ($("#client_secret").val() == ""){
+      alert("client_secret 값을 입력해 주세요.");
+      return $("#client_secret").focus();
+    }
+
+    $.ajax({
+      type: "POST",
+      async: false,
+      url: "{% url 'ncloud:Papago' %}",
+      data: {'client_id':$("#client_id").val(), 'client_secret':$("#client_secret").val(), 'encText':$("#encText").val(), 'target_lang':$("#target_lang").val(), 'target':$("#target").val()},
+      dataType: "json",
+      success: function(data){
+        console.log(data);
+        $("#result_area").html("rescode : " + data.rescode + "<br><br><br>");
+        $("#result_area").append(data.srcLangType + "   ------>   " + data.targetLangType + "<br><br><br>");
+        $("#result_area").append("translatedText : " + data.transText + "<br>");
+        $("#name_area").html("Papago " + (data.papago_target).toUpperCase() + " API Result");
+      },
+      error: function(request, status, error){
+        alert(request.responseText);
+      },
+    });
+  })
+</script>
+
+{% endblock content %}

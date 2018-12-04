@@ -1,0 +1,145 @@
+{% extends "learning_logs/base.html" %}
+{% load bootstrap3 %}
+{% block page_name %}&nbsp;<a href="{% url 'ncloud:index' %}">Ncloud API Check</a>{% endblock %}
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+  <li>Dashboard</li>
+  <li>NCP API</li>
+</ul><br>
+{% endblock breadcrumbs %}
+{% block content %}
+{% include 'ncloud/api_list.html' %}
+<link rel="stylesheet" href="{% static 'css/checkbox.css' %}" />
+<div class="box">
+  <div class="box-body">
+    <div class="box-header with-border chk_hd" style="margin: 5px 5px 5px 10px">
+      <div style="-webkit-flex:1; flex:1;"><h4>LoadBalancing</h4></div>
+      <div class="checks etrans chk_all" ><input type="checkbox" id="checkall" /><label for="checkall">모두선택</label></div>
+    </div>
+
+    <div class="box-body">
+      <div class="dataTables_wrapper form-inline dt-bootstrap no-footer" id="datatables-example_wrapper">
+        <div class="row">
+          <div class="col-sm-12">
+            <form action="" method="POST">
+              {% csrf_token %}
+              <div style="margin: 10px 20px 20px 0px">
+                <div class="chk_hd">
+                    <div class="checks etrans chk_bd1">
+                      <input type="checkbox" id="1" name="chk[]" value="getLoadBalancerInstanceList" /><label for="1">LB 인스턴스 리스트</label>
+                    </div>
+                    <div class="checks etrans chk_bd1">
+                      <input type="checkbox" id="2" name="chk[]" value="getLoadBalancerSslCertificateList" /><label for="2">LB SSL 인증서조회</label>
+                    </div>
+                </div>
+
+                <br/>
+
+                <span class="recive">
+                  Access Key &nbsp;&nbsp;&nbsp; <input type="text" name="access_key" id="access_key" placeholder="Access Key" value=" "/>
+                  </span>
+                  <span class="recive">
+                    Secret Key &nbsp;&nbsp;&nbsp; <input type="text" name="secret_key" id="secret_key" placeholder="Secret Key" value=" "/>
+                  </span><br><br>
+                  <span class="recive">
+                    API Key &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text" name="api_key" id="api_key" placeholder="API Key" value=" " />
+                    </span>&nbsp;&nbsp;&nbsp;
+                  <span class="recive">
+                    Query &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text" name="query" id="query" placeholder="Query string"/>
+                  </span>
+                <span class="recive"> &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="button" class="ui button huge" name="testBtn" id="testBtn" value="submit" style="height: 40px; width: 100px" />
+                  </span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="box">
+  <div class="box-body">
+    <div class="box-header with-border">
+      <h4>LoadBalancing Result</h4><br>
+    </div>
+
+    <pre id="result_area">
+      <div class="rescode" style="margin: 10px 0 0 10px; width:10px; height:10px;"></div>
+    </pre>
+  </div>
+</div>
+
+<div class="wrap-loading display-none" >
+  <div class="loader"></div>
+</div>
+
+<script type="text/javascript">
+$(document).ready( () => {
+  $("#checkall").click( () => {
+    if($("#checkall").prop("checked")){
+      $("input[name='chk[]']").prop("checked", true);
+    }else{
+      $("input[name='chk[]']").prop("checked", false);
+    }
+  })
+})
+
+  $("#testBtn").click(function(){
+    if ($("#api_key").val() == ""){
+      alert("api_key 값을 입력해 주세요.");
+      return $("#api_key").focus();
+    }
+    if ($("#access_key").val() == ""){
+      alert("access_key 값을 입력해 주세요.");
+      return $("#access_key").focus();
+    }
+    if ($("#secret_key").val() == ""){
+      alert("secret_key 값을 입력해 주세요.");
+      return $("#secret_key").focus();
+    }
+    if ( !$("input[name='chk[]']").is(":checked") ){
+      alert("check.");
+      return $("#checkall").focus();
+    }
+
+    var list = [];
+    $("input[name='chk[]']:checked").each(function(){
+      list.push($(this).val());
+      $("#result_area").html("<div onclick='("+'$(".result").slideToggle("slow")'+")'>action : rescode ▼ </div><br/><br/>");
+    })
+
+    $('.wrap-loading').removeClass('display-none');
+
+    setTimeout(function(){
+
+      for (let key=0; key < list.length; key++){
+
+      $.ajax({
+        type: "POST",
+        async: false,
+        url: "{% url 'ncloud:IaaS' %}",
+        data: {'uri':'/loadbalancer/v1/', 'api_key':$("#api_key").val(), 'access_key':$("#access_key").val(), 'secret_key':$("#secret_key").val(), 'query':$("#query").val(), 'url_list': list[key] },
+        dataType: "json",
+        success: function(data){
+          $("#result_area").append("<div class='rescode' id='"+ key +"' onclick='slide("+ key +")' style='cursor:pointer'>" + list[key] + " : " + data.rescode  + "</div>");
+          $("#result_area").append("<textarea class='result' id='pannel" + key + "'>" + data.result + "</textarea>");
+        },error: function(request, status, error){
+          alert(request.responseText);
+        },
+      });
+
+        if(key===(list.length - 1)){
+          $('.wrap-loading').addClass('display-none');
+        }
+      }
+    }, 100);
+  });
+
+  function slide(key){
+    $("#pannel" + key).slideToggle("slow");
+  }
+
+</script>
+{% endblock content %}

@@ -1,0 +1,87 @@
+{% extends "learning_logs/base.html" %}
+{% load bootstrap3 %}
+{% block page_name %}&nbsp;<a href="{% url 'ncloud:index' %}">Ncloud API Check</a>{% endblock %}
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+  <li>Dashboard</li>
+  <li>NCP API</li>
+</ul>
+<br>
+{% endblock breadcrumbs %}
+{% block content %}
+{% include 'ncloud/api_list.html' %}
+
+<div class="box">
+  <div class="box-body">
+    <div class="box-header with-border">
+      <h4>Clova API</h4>
+    </div>
+    <div class="box-body">
+      <div class="dataTables_wrapper form-inline dt-bootstrap no-footer" id="datatables-example_wrapper">
+        <div class="row">
+          <div class="col-sm-12">
+            <form action="" method="POST">
+              {% csrf_token %}
+              <div style="margin: 20px 20px 20px 0px">
+                <span style="margin: 10px 0 0 30px">
+                  Client ID &nbsp;&nbsp;&nbsp; <input type="text" name="client_id" id="client_id" placeholder="Client Id"/>
+                  </span>
+                <span style="margin: 10px 0 0 30px">
+                  Client Secret &nbsp;&nbsp;&nbsp; <input type="text" name="client_secret" id="client_secret" placeholder="Client secret"/>
+                  </span>
+                <span style="margin: 10px 0 0 30px"> &nbsp;&nbsp;&nbsp;
+                    <input type="button" class="ui button huge" name="testBtn" id="testBtn" value="submit" style="height: 40px; width: 100px" />
+                  </span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="box">
+  <div class="box-body">
+    <div class="box-header with-border">
+      <h4>Clova API Result</h4><br>
+    </div>
+<pre>
+<div id="result_area" class="box-header with-border" style="margin: 10px 0 0 10px"></div><div id="download_area" class="box-header with-border" style="display:none; margin: 10px 0 0 10px">  <a href="/media/NAVER_TEST.mp3" download><h4>MP3 download</h4></a></div>
+  </pre>
+  </div>
+</div>
+<script type="text/javascript">
+
+  $("#testBtn").click(function(){
+    if ($("#client_id").val() == ""){
+      alert("client_id 값을 입력해 주세요.");
+      return $("#client_id").focus();
+
+    }
+    if ($("#client_secret").val() == ""){
+      alert("client_secret 값을 입력해 주세요.");
+      return $("#client_secret").focus();
+    }
+
+    $.ajax({
+      type: "POST",
+      async: false,
+      url: "{% url 'ncloud:CSS' %}",
+      data: {'client_id':$("#client_id").val(), 'client_secret':$("#client_secret").val()},
+      dataType: "json",
+      success: function(data){
+        $("#result_area").html("rescode : " + data.rescode);
+        if (data.rescode == 200){
+          $("#download_area").css("display","block");
+        }
+      },
+      error: function(request, status, error){
+        alert(request.responseText);
+      },
+    });
+  })
+
+</script>
+
+{% endblock content %}

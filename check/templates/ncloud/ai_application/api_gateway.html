@@ -1,0 +1,104 @@
+{% extends "learning_logs/base.html" %}
+{% load bootstrap3 %}
+{% block page_name %}&nbsp;<a href="{% url 'ncloud:index' %}">Ncloud API Check</a>{% endblock %}
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+  <li>Dashboard</li>
+  <li>NCP API</li>
+</ul>
+<br>
+{% endblock breadcrumbs %}
+{% block content %}
+{% include 'ncloud/api_list.html' %}
+
+<div class="box">
+  <div class="box-body">
+    <div class="box-header with-border">
+      <h4>API Gateway</h4>
+    </div>
+    <div class="box-body">
+      <div class="dataTables_wrapper form-inline dt-bootstrap no-footer" id="datatables-example_wrapper">
+        <div class="row">
+          <div class="col-sm-12">
+            <form action="" method="POST">
+              {% csrf_token %}
+              <div style="margin: 20px 20px 20px 0px">
+                <span style="margin: 10px 0 0 30px">
+                  Access Key &nbsp;&nbsp;&nbsp; <input type="text" name="access_key" id="access_key" placeholder="Access Key"/>
+                  </span>
+                  <span style="margin: 10px 0 0 30px">
+                    Secret Key &nbsp;&nbsp;&nbsp; <input type="text" name="secret_key" id="secret_key" placeholder="Secret Key"/>
+                  </span><br><br>
+                  <span style="margin: 10px 0 0 30px">
+                    API Key &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text" name="api_key" id="api_key" placeholder="API Key"/>
+                    </span>&nbsp;&nbsp;&nbsp;
+                  <span style="margin: 10px 0 0 30px">
+                    URL &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text" name="url_value" id="url_value" placeholder="API Gateway URL"/>
+                  </span>
+
+                <span style="margin: 10px 0 0 30px"> &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="button" class="ui button huge" name="testBtn" id="testBtn" value="submit" style="height: 40px; width: 100px" />
+                  </span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="box">
+  <div class="box-body">
+    <div class="box-header with-border">
+      <h4>API Gateway Result</h4><br>
+    </div>
+    <pre id="result_area">
+      <div class="box-header with-border" style="margin: 10px 0 0 10px"></div>
+    </pre>
+  </div>
+</div>
+<script type="text/javascript">
+
+  $("#testBtn").click(function(){
+    if ($("#api_key").val() == ""){
+      alert("api_key 값을 입력해 주세요.");
+      return $("#api_key").focus();
+
+    }
+    if ($("#access_key").val() == ""){
+      alert("access_key 값을 입력해 주세요.");
+      return $("#access_key").focus();
+    }
+    if ($("#secret_key").val() == ""){
+      alert("secret_key 값을 입력해 주세요.");
+      return $("#secret_key").focus();
+    }
+    if ($("#url_value").val() == ""){
+      alert("url_value 값을 입력해 주세요.");
+      return $("#url_value").focus();
+    }
+
+    $.ajax({
+      type: "POST",
+      async: false,
+      url: "{% url 'ncloud:APIGW' %}",
+      data: {'api_key':$("#api_key").val(), 'access_key':$("#access_key").val(), 'secret_key':$("#secret_key").val(), 'url_value':$("#url_value").val()},
+      dataType: "json",
+      success: function(data){
+        $("#result_area").html("rescode : " + data.rescode);
+        $("#result_area").append("<br><br>url : " + data.url);
+        $("#result_area").append("<br><br>uri : " + data.uri);
+        if (data.rescode == 200){
+          $("#result_area").val();
+        }
+      },
+      error: function(request, status, error){
+        alert(request.responseText);
+      },
+    });
+  })
+
+</script>
+
+{% endblock content %}

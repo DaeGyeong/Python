@@ -12,9 +12,9 @@ def index(request):
     ''' home page '''
     return render(request, 'learning_logs/index.html')
 
-def nsight(request):
+def mon(request):
     url = "http://api.nsight.navercorp.com/monapi/api/request?r=R-20150923-001&k=dev-cloudojt001-ncl&rt=img"
-    return render(request, 'learning_logs/nsight.html', {'url': url})
+    return render(request, 'learning_logs/mon.html', {'url': url})
 
 @login_required
 def topics(request):
